@@ -497,7 +497,7 @@ body {
 
 <!-- ── Food Select Modal ── -->
 <div class="modal-overlay" id="food-modal" onclick="closeFoodModal(event)">
-  <div class="modal">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">食材を選ぶ</div>
     <div class="modal-list" id="modal-food-list"></div>
@@ -506,7 +506,7 @@ body {
 
 <!-- ── Add Food Modal ── -->
 <div class="modal-overlay" id="add-food-modal" onclick="closeAddFoodModal(event)">
-  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);">
+  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">食材を追加</div>
     <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
@@ -535,8 +535,8 @@ body {
 </div>
 
 <!-- ── Recipe Add Modal ── -->
-<div class="modal-overlay" id="recipe-add-modal" onclick="closeRecipeAddModal(event)">
-  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);">
+<div class="modal-overlay" id="recipe-add-modal" onclick="closeRecipeAddModal(event)" style="touch-action:none;">
+  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);" onclick="event.stopPropagation()">
     <div class="modal-handle"></div>
     <div class="modal-title">レシピに追加</div>
     <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
