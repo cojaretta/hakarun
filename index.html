@@ -504,6 +504,7 @@ function renderConvert() {
 
   // Units
   const chips = document.getElementById('unit-chips');
+  if (!chips) return;
   chips.innerHTML = '';
   const units = state.direction === 'vol' ? UNITS_VOL : UNITS_WT;
   const activeUnit = state.direction === 'vol' ? state.unitVol : state.unitWt;
@@ -532,6 +533,7 @@ function renderConvert() {
 
 function renderRecipe() {
   const list = document.getElementById('recipe-list');
+  if (!list) return;
   const items = state.recipeItems;
   if (items.length === 0) {
     list.innerHTML = '<div style="color:var(--text-sub);font-size:13px;padding:12px 0;text-align:center;">まだ食材がありません</div>';
@@ -564,6 +566,7 @@ function renderFoodList() {
 
   const renderItems = (items, containerId) => {
     const el = document.getElementById(containerId);
+    if (!el) return;
     el.innerHTML = '';
     if (items.length === 0) {
       el.innerHTML = '<div style="color:var(--text-sub);font-size:12px;padding:8px 0;">見つかりません</div>';
@@ -591,6 +594,7 @@ function renderFoodList() {
 
 function renderRecipeUnitChips() {
   const el = document.getElementById('r-unit-chips');
+  if (!el) return;
   el.innerHTML = '';
   UNITS_VOL.forEach(u => {
     const div = document.createElement('div');
@@ -606,9 +610,9 @@ function switchTab(tab, el) {
   // サブスクリーンを必ず閉じる
   document.getElementById('recipe-add').classList.remove('open');
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + tab).classList.add('active');
-  if (el) { el.classList.add('active'); el.classList.add('green'); }
+  if (el) el.classList.add('active');
   if (tab === 'foods') renderFoodList();
   if (tab === 'recipe') renderRecipe();
 }
@@ -647,6 +651,7 @@ function setScale(s, el) {
 function openFoodModal(target) {
   state.foodModalTarget = target;
   const list = document.getElementById('modal-list');
+  if (!list) return;
   list.innerHTML = '';
   const currentId = target === 'convert' ? state.convertFood.id : state.recipeFood.id;
   allFoods().forEach(f => {
