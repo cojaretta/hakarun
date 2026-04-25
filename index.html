@@ -465,7 +465,7 @@ body {
     <div class="recipe-list" id="recipe-list">
       <div style="color:var(--text-sub);font-size:13px;padding:12px 0;text-align:center;">まだ食材がありません</div>
     </div>
-    <button class="add-btn" onclick="openRecipeAddModal()">＋ 食材を追加</button>
+    <button class="add-btn" onclick="openRecipeAdd()">＋ 食材を追加</button>
   </div>
 
 </div>
@@ -534,12 +534,6 @@ body {
   </div>
 </div>
 
-<!-- ── Recipe Add Modal ── -->
-<div class="modal-overlay" id="recipe-add-modal" onclick="closeRecipeAddModal(event)">
-  <div class="modal" onclick="event.stopPropagation()" style="max-height:92dvh;padding-bottom:0;">
-    <div class="modal-handle"></div>
-    <div class="modal-title">レシピに追加</div>
-
     <!-- スクロールしない固定エリア：食材・単位 -->
     <div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
       <div>
@@ -586,6 +580,60 @@ body {
       </div>
       <button class="green-btn" onclick="addToRecipe()" style="font-size:17px;padding:16px;">✓ 追加する</button>
     </div>
+  </div>
+</div>
+
+<!-- ── Recipe Add Sub-screen ── -->
+<div id="screen-recipe-add" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:50;flex-direction:column;max-width:430px;margin:0 auto;">
+  <!-- ヘッダー -->
+  <div style="padding:calc(var(--safe-top)+8px) 16px 12px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    <button onclick="closeRecipeAdd()" style="border:none;background:none;font-size:22px;color:var(--text-sub);cursor:pointer;padding:4px;">‹</button>
+    <div style="font-size:20px;font-weight:700;">食材を追加</div>
+  </div>
+
+  <!-- 食材選択 -->
+  <div style="padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;">
+    <div>
+      <div class="card-label" style="margin-bottom:6px;">食材</div>
+      <div class="food-selector" onclick="openFoodModal('recipe')">
+        <div class="food-emoji" id="recipe-sel-emoji">🌾</div>
+        <div>
+          <div class="food-name-big" id="recipe-sel-name">薄力粉</div>
+          <div class="food-density-small" id="recipe-sel-density">比重 0.53 g/ml</div>
+        </div>
+        <div class="food-chevron">▼</div>
+      </div>
+    </div>
+    <div>
+      <div class="card-label" style="margin-bottom:6px;">単位</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recipe-unit-chips"></div>
+    </div>
+    <div>
+      <div class="card-label" style="margin-bottom:6px;">量</div>
+      <div class="num-input-wrap" style="cursor:default;">
+        <div class="num-display" id="recipe-num-display" style="font-size:34px;">0</div>
+        <div class="num-unit-label" id="recipe-num-unit-label">大さじ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- テンキー＋追加ボタン（常に下に固定） -->
+  <div style="padding:8px 14px calc(var(--safe-bottom)+10px);background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px;">
+      <button class="key-btn" onclick="rkp('7')">7</button>
+      <button class="key-btn" onclick="rkp('8')">8</button>
+      <button class="key-btn" onclick="rkp('9')">9</button>
+      <button class="key-btn" onclick="rkp('4')">4</button>
+      <button class="key-btn" onclick="rkp('5')">5</button>
+      <button class="key-btn" onclick="rkp('6')">6</button>
+      <button class="key-btn" onclick="rkp('1')">1</button>
+      <button class="key-btn" onclick="rkp('2')">2</button>
+      <button class="key-btn" onclick="rkp('3')">3</button>
+      <button class="key-btn key-dot" onclick="rkp('.')">·</button>
+      <button class="key-btn" onclick="rkp('0')">0</button>
+      <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
+    </div>
+    <button class="green-btn" onclick="addToRecipe()" style="font-size:17px;padding:15px;">✓ 追加する</button>
   </div>
 </div>
 
@@ -953,7 +1001,7 @@ function renderRecipeNumUnit() {
   if (el) el.textContent = unit ? unit.label : '';
 }
 
-function openRecipeAddModal() {
+function openRecipeAdd() {
   state.recipeFood = PRESET_FOODS[0];
   state.recipeUnitVol = 'tbsp';
   recipeInputStr = '0';
@@ -963,11 +1011,9 @@ function openRecipeAddModal() {
   document.getElementById('recipe-num-display').textContent = '0';
   renderRecipeUnitChips();
   renderRecipeNumUnit();
-  document.getElementById('recipe-add-modal').classList.add('open');
+  document.getElementById('screen-recipe-add').style.display = 'flex';
 }
-function closeRecipeAddModal(e) {
-  if (e.target === document.getElementById('recipe-add-modal')) document.getElementById('recipe-add-modal').classList.remove('open');
-}
+function closeRecipeAdd() { document.getElementById('screen-recipe-add').style.display = 'none'; }
 function addToRecipe() {
   const amount = parseFloat(recipeInputStr);
   if (!amount || amount <= 0) { showToast('量を入力してください'); return; }
@@ -980,7 +1026,7 @@ function addToRecipe() {
     amount,
   });
   saveState();
-  document.getElementById('recipe-add-modal').classList.remove('open');
+  document.getElementById('screen-recipe-add').style.display = 'none';
   renderRecipe();
   showToast(`「${state.recipeFood.name}」を追加しました`);
 }
