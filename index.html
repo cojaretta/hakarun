@@ -120,8 +120,8 @@ body {
 .result-formula { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.7; text-align: right; font-family: 'DM Mono', monospace; }
 
 /* テンキー */
-.keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; padding: 12px 14px; background: var(--bg); border-top: 1px solid var(--border); flex-shrink: 0; }
-.key { aspect-ratio: 1.5; border-radius: 10px; border: none; font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; background: var(--surface); color: var(--text); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+.keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; padding: 6px 12px; background: var(--bg); border-top: 1px solid var(--border); flex-shrink: 0; }
+.key { aspect-ratio: 3.2; border-radius: 8px; border: none; font-size: 17px; font-weight: 600; font-family: 'DM Mono', monospace; background: var(--surface); color: var(--text); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
 .key:active { background: var(--border); }
 .key.del { font-size: 16px; background: var(--border); }
 
@@ -360,7 +360,7 @@ body {
     <div class="sub-title">食材を追加</div>
     <button class="add-confirm-btn" onclick="addToRecipe()">✓ 追加</button>
   </div>
-  <div class="scroll">
+  <div class="scroll" style="padding-bottom:20px;">
     <div class="card">
       <div class="label">食材</div>
       <div class="food-sel" onclick="openFoodModal('recipe')">
@@ -509,7 +509,7 @@ function renderConvert() {
   const activeUnit = state.direction === 'vol' ? state.unitVol : state.unitWt;
   units.forEach(u => {
     const div = document.createElement('div');
-    div.className = 'unit-chip' + (u.id === activeUnit ? ' active' : '');
+    div.className = 'chip' + (u.id === activeUnit ? ' active' : '');
     div.textContent = u.label;
     div.onclick = () => {
       if (state.direction === 'vol') state.unitVol = u.id;
@@ -594,7 +594,7 @@ function renderRecipeUnitChips() {
   el.innerHTML = '';
   UNITS_VOL.forEach(u => {
     const div = document.createElement('div');
-    div.className = 'unit-chip' + (u.id === state.recipeUnitVol ? ' active' : '');
+    div.className = 'chip' + (u.id === state.recipeUnitVol ? ' active' : '');
     div.textContent = u.label;
     div.onclick = () => { state.recipeUnitVol = u.id; renderRecipeUnitChips(); renderRecipeNumUnit(); };
     el.appendChild(div);
@@ -608,7 +608,7 @@ function switchTab(tab, el) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + tab).classList.add('active');
-  if (el) el.classList.add('active');
+  if (el) { el.classList.add('active'); el.classList.add('green'); }
   if (tab === 'foods') renderFoodList();
   if (tab === 'recipe') renderRecipe();
 }
@@ -638,8 +638,8 @@ function kp(key) {
 // ── Scale ──
 function setScale(s, el) {
   state.scale = s;
-  document.querySelectorAll('.scale-chip').forEach(e => e.classList.remove('active'));
-  if (el) el.classList.add('active');
+  document.querySelectorAll('#scale-chips .chip').forEach(e => { e.classList.remove('active'); e.classList.remove('green'); });
+  if (el) { el.classList.add('active'); el.classList.add('green'); }
   renderRecipe();
 }
 
