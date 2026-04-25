@@ -245,20 +245,23 @@ body {
       <div class="label">単位</div>
       <div class="chips" id="unit-chips"></div>
     </div>
-    <div class="card">
-      <div class="label">入力</div>
-      <div class="num-box">
-        <div class="num-big" id="num-display">0</div>
-        <div class="num-unit" id="num-unit">大さじ</div>
+    <!-- 入力・結果 横並び -->
+    <div style="display:flex;gap:10px;align-items:stretch;">
+      <div class="card" style="flex:1;min-width:0;">
+        <div class="label" id="input-label">入力</div>
+        <div style="margin-top:4px;">
+          <div style="font-size:30px;font-weight:700;font-family:'DM Mono',monospace;line-height:1.1;" id="num-display">0</div>
+          <div style="font-size:13px;color:var(--sub);margin-top:4px;" id="num-unit">大さじ</div>
+        </div>
       </div>
-    </div>
-    <div class="result">
-      <div>
-        <div class="result-label" id="result-label">重さ</div>
-        <div class="result-num" id="result-num">—</div>
-        <div class="result-unit" id="result-unit">g</div>
+      <div style="display:flex;align-items:center;flex-shrink:0;color:var(--sub);font-size:20px;">→</div>
+      <div class="result" style="flex:1;min-width:0;border-radius:14px;padding:12px;">
+        <div style="width:100%;">
+          <div class="result-label" id="result-label">重さ</div>
+          <div style="font-size:30px;font-weight:900;color:white;font-family:'DM Mono',monospace;line-height:1.1;" id="result-num">—</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:4px;" id="result-unit">g</div>
+        </div>
       </div>
-      <div class="result-formula" id="result-formula"></div>
     </div>
   </div>
   <div class="keypad">
@@ -283,8 +286,7 @@ body {
     <div class="card">
       <div class="label">人数スケール</div>
       <div class="chips" id="scale-chips">
-        <div class="chip" onclick="setScale(0.5,this)">×½</div>
-        <div class="chip green" onclick="setScale(1,this)">×1</div>
+<div class="chip green" onclick="setScale(1,this)">×1</div>
         <div class="chip" onclick="setScale(2,this)">×2</div>
         <div class="chip" onclick="setScale(3,this)">×3</div>
         <div class="chip" onclick="setScale(4,this)">×4</div>
@@ -307,10 +309,6 @@ body {
       <span>🔍</span>
       <input type="text" placeholder="食材名で検索…" id="food-search" oninput="renderFoodList()">
       <div class="ai-badge"><div class="ai-dot"></div><div class="ai-text">AI補完</div></div>
-    </div>
-    <div class="card">
-      <div class="label">プリセット食材</div>
-      <div id="preset-list"></div>
     </div>
     <div class="card">
       <div class="label">マイ食材</div>
@@ -527,7 +525,7 @@ function renderConvert() {
   const res = calcResult();
   document.getElementById('result-num').textContent = res.display;
   document.getElementById('result-unit').textContent = res.unit || '';
-  document.getElementById('result-formula').textContent = res.formula || '';
+  const rf = document.getElementById('result-formula'); if(rf) rf.textContent = res.formula || '';
   document.getElementById('result-label').textContent = res.label || '';
 }
 
