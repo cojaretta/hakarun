@@ -589,6 +589,7 @@ body {
   <div style="padding:calc(var(--safe-top)+8px) 16px 12px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;">
     <button onclick="closeRecipeAdd()" style="border:none;background:none;font-size:22px;color:var(--text-sub);cursor:pointer;padding:4px;">‹</button>
     <div style="font-size:20px;font-weight:700;">食材を追加</div>
+    <button onclick="addToRecipe()" style="margin-left:auto;background:var(--green);color:white;border:none;border-radius:12px;padding:9px 18px;font-size:15px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;">✓ 追加</button>
   </div>
 
   <!-- 食材選択 -->
@@ -633,7 +634,6 @@ body {
       <button class="key-btn" onclick="rkp('0')">0</button>
       <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
     </div>
-    <button class="green-btn" onclick="addToRecipe()" style="font-size:17px;padding:15px;">✓ 追加する</button>
   </div>
 </div>
 
