@@ -535,11 +535,13 @@ body {
 </div>
 
 <!-- ── Recipe Add Modal ── -->
-<div class="modal-overlay" id="recipe-add-modal" onclick="closeRecipeAddModal(event)" style="touch-action:none;">
-  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);" onclick="event.stopPropagation()">
+<div class="modal-overlay" id="recipe-add-modal" onclick="closeRecipeAddModal(event)">
+  <div class="modal" onclick="event.stopPropagation()" style="max-height:92dvh;padding-bottom:0;">
     <div class="modal-handle"></div>
     <div class="modal-title">レシピに追加</div>
-    <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
+
+    <!-- スクロールしない固定エリア：食材・単位 -->
+    <div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
       <div>
         <div class="card-label" style="margin-bottom:6px;">食材</div>
         <div class="food-selector" onclick="openFoodModal('recipe')" id="recipe-food-selector">
@@ -552,31 +554,37 @@ body {
         </div>
       </div>
       <div>
-        <div class="card-label" style="margin-bottom:6px;">体積</div>
+        <div class="card-label" style="margin-bottom:6px;">単位</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recipe-unit-chips"></div>
       </div>
+
+      <!-- 量表示 -->
       <div>
         <div class="card-label" style="margin-bottom:6px;">量</div>
         <div class="num-input-wrap" style="cursor:default;">
           <div class="num-display" id="recipe-num-display" style="font-size:28px;">0</div>
           <div class="num-unit-label" id="recipe-num-unit-label">大さじ</div>
         </div>
-        <div class="keypad" style="padding:10px 0 0;background:none;border-top:none;gap:6px;">
-          <button class="key-btn" onclick="rkp('7')">7</button>
-          <button class="key-btn" onclick="rkp('8')">8</button>
-          <button class="key-btn" onclick="rkp('9')">9</button>
-          <button class="key-btn" onclick="rkp('4')">4</button>
-          <button class="key-btn" onclick="rkp('5')">5</button>
-          <button class="key-btn" onclick="rkp('6')">6</button>
-          <button class="key-btn" onclick="rkp('1')">1</button>
-          <button class="key-btn" onclick="rkp('2')">2</button>
-          <button class="key-btn" onclick="rkp('3')">3</button>
-          <button class="key-btn key-dot" onclick="rkp('.')">·</button>
-          <button class="key-btn" onclick="rkp('0')">0</button>
-          <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
-        </div>
       </div>
-      <button class="green-btn" onclick="addToRecipe()">追加する</button>
+    </div>
+
+    <!-- テンキー＋追加ボタン：常に下に固定 -->
+    <div style="padding:10px 16px calc(var(--safe-bottom)+12px);flex-shrink:0;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;">
+        <button class="key-btn" onclick="rkp('7')">7</button>
+        <button class="key-btn" onclick="rkp('8')">8</button>
+        <button class="key-btn" onclick="rkp('9')">9</button>
+        <button class="key-btn" onclick="rkp('4')">4</button>
+        <button class="key-btn" onclick="rkp('5')">5</button>
+        <button class="key-btn" onclick="rkp('6')">6</button>
+        <button class="key-btn" onclick="rkp('1')">1</button>
+        <button class="key-btn" onclick="rkp('2')">2</button>
+        <button class="key-btn" onclick="rkp('3')">3</button>
+        <button class="key-btn key-dot" onclick="rkp('.')">·</button>
+        <button class="key-btn" onclick="rkp('0')">0</button>
+        <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
+      </div>
+      <button class="green-btn" onclick="addToRecipe()" style="font-size:17px;padding:16px;">✓ 追加する</button>
     </div>
   </div>
 </div>
