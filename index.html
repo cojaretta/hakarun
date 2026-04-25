@@ -452,11 +452,11 @@ body {
   <div class="card">
     <div class="card-label">人数スケール</div>
     <div class="scale-row" id="scale-row">
-      <div class="scale-chip" onclick="setScale(0.5)">×½</div>
-      <div class="scale-chip active" onclick="setScale(1)">×1</div>
-      <div class="scale-chip" onclick="setScale(2)">×2</div>
-      <div class="scale-chip" onclick="setScale(3)">×3</div>
-      <div class="scale-chip" onclick="setScale(4)">×4</div>
+      <div class="scale-chip" onclick="setScale(0.5,this)">×½</div>
+      <div class="scale-chip active" onclick="setScale(1,this)">×1</div>
+      <div class="scale-chip" onclick="setScale(2,this)">×2</div>
+      <div class="scale-chip" onclick="setScale(3,this)">×3</div>
+      <div class="scale-chip" onclick="setScale(4,this)">×4</div>
     </div>
   </div>
 
@@ -870,10 +870,10 @@ function kp(key) {
 }
 
 // ── Scale ──
-function setScale(s) {
+function setScale(s, el) {
   state.scale = s;
-  document.querySelectorAll('.scale-chip').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  document.querySelectorAll('.scale-chip').forEach(e => e.classList.remove('active'));
+  if (el) el.classList.add('active');
   renderRecipe();
 }
 
