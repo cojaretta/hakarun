@@ -7,23 +7,21 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="はかるん">
 <title>はかるん</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
 :root {
   --bg: #F7F2EA;
   --surface: #FFFDF8;
   --border: #DDD5C4;
   --text: #2C2416;
-  --text-sub: #9C8B72;
+  --sub: #9C8B72;
   --accent: #C85C2A;
   --accent-soft: #F5E3D8;
   --green: #2E7D5A;
   --green-soft: #D4EDE2;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 body {
   font-family: 'Noto Sans JP', sans-serif;
@@ -32,610 +30,381 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   max-width: 430px;
   margin: 0 auto;
+  overflow: hidden;
   position: relative;
 }
 
-/* ── Header ── */
+/* ヘッダー */
 .header {
-  padding: calc(var(--safe-top) + 8px) 20px 14px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  padding: 12px 20px 10px;
   flex-shrink: 0;
-}
-.header-row { display: flex; align-items: flex-end; justify-content: space-between; }
-.app-title { font-size: 26px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; }
-.app-title span { color: var(--accent); }
-.header-sub { font-size: 11px; color: var(--text-sub); margin-top: 1px; font-family: 'DM Mono', monospace; }
-
-/* ── Tab Bar ── */
-.tab-bar {
   display: flex;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.tab-btn {
-  flex: 1;
-  padding: 10px 4px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: relative;
-}
-.tab-btn::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 20%; right: 20%;
-  height: 2px;
-  background: var(--accent);
-  border-radius: 2px 2px 0 0;
-  transform: scaleX(0);
-  transition: transform 0.2s;
-}
-.tab-btn.active::after { transform: scaleX(1); }
-.tab-icon { font-size: 20px; }
-.tab-label { font-size: 10px; color: var(--text-sub); font-weight: 500; }
-.tab-btn.active .tab-label { color: var(--accent); }
-
-/* ── Scroll Content ── */
-.screen { display: none; flex: 1; flex-direction: column; min-height: 0; }
-.screen.active { display: flex; }
-.screen-scroll { flex: 1; overflow-y: auto; padding: 16px 16px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
-
-/* ── Cards ── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-}
-.card-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-sub);
-  margin-bottom: 10px;
-  font-family: 'DM Mono', monospace;
-}
-
-/* ── Food Selector ── */
-.food-selector {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-  cursor: pointer;
-  transition: border-color 0.15s;
-}
-.food-selector:active { border-color: var(--accent); }
-.food-emoji { font-size: 28px; width: 44px; height: 44px; background: var(--accent-soft); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.food-name-big { font-size: 17px; font-weight: 700; }
-.food-density-small { font-size: 11px; color: var(--text-sub); font-family: 'DM Mono', monospace; margin-top: 2px; }
-.food-chevron { margin-left: auto; font-size: 14px; color: var(--text-sub); }
-
-/* ── Direction Toggle ── */
-.dir-toggle { display: flex; background: var(--bg); border-radius: 12px; padding: 3px; border: 1px solid var(--border); }
-.dir-btn { flex: 1; padding: 9px 8px; border-radius: 10px; font-size: 13px; font-weight: 600; text-align: center; color: var(--text-sub); cursor: pointer; transition: all 0.18s; border: none; background: none; }
-.dir-btn.active { background: var(--accent); color: white; }
-
-/* ── Unit Chips ── */
-.unit-chips { display: flex; gap: 7px; flex-wrap: wrap; }
-.unit-chip { padding: 7px 14px; border-radius: 22px; font-size: 13px; font-weight: 500; border: 1.5px solid var(--border); color: var(--text-sub); background: var(--bg); cursor: pointer; transition: all 0.15s; }
-.unit-chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-
-/* ── Number Input ── */
-.num-input-wrap {
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: text;
-}
-.num-display { font-size: 38px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--text); flex: 1; min-width: 0; }
-.num-unit-label { font-size: 15px; color: var(--text-sub); flex-shrink: 0; }
-
-/* ── Result ── */
-.result-card {
-  background: var(--accent);
-  border-radius: 18px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 }
-.result-label-small { font-size: 11px; color: rgba(255,255,255,0.65); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
-.result-number { font-size: 46px; font-weight: 900; color: white; font-family: 'DM Mono', monospace; line-height: 1; letter-spacing: -1px; }
-.result-unit-big { font-size: 18px; color: rgba(255,255,255,0.8); margin-top: 4px; }
-.result-formula { font-size: 11px; color: rgba(255,255,255,0.55); line-height: 1.6; text-align: right; font-family: 'DM Mono', monospace; }
+.app-title { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; }
+.app-title span { color: var(--accent); }
+.app-sub { font-size: 11px; color: var(--sub); font-family: 'DM Mono', monospace; }
 
-/* ── Recipe ── */
-.recipe-list { display: flex; flex-direction: column; gap: 0; }
-.recipe-row {
+/* タブ */
+.tabs {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--border);
-}
-.recipe-row:last-child { border-bottom: none; }
-.recipe-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-.recipe-food-name { font-size: 14px; font-weight: 500; flex: 1; }
-.recipe-from { font-size: 12px; color: var(--text-sub); font-family: 'DM Mono', monospace; }
-.recipe-arrow { font-size: 11px; color: var(--border); margin: 0 3px; }
-.recipe-to { font-size: 13px; font-weight: 700; color: var(--accent); font-family: 'DM Mono', monospace; min-width: 44px; text-align: right; }
-.recipe-del { width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); background: none; color: var(--text-sub); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-
-.scale-row { display: flex; align-items: center; gap: 7px; }
-.scale-chip { padding: 6px 14px; border-radius: 20px; font-size: 13px; border: 1.5px solid var(--border); color: var(--text-sub); background: var(--bg); cursor: pointer; font-family: 'DM Mono', monospace; font-weight: 500; transition: all 0.15s; }
-.scale-chip.active { background: var(--green); border-color: var(--green); color: white; }
-
-/* ── Add Button ── */
-.add-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border: 1.5px dashed var(--border);
-  border-radius: 14px;
-  padding: 13px;
-  font-size: 14px;
-  color: var(--text-sub);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 500;
-  width: 100%;
-  margin-top: 8px;
-}
-.add-btn:active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-
-/* ── Food Management ── */
-.food-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 11px 0;
-  border-bottom: 1px solid var(--border);
-}
-.food-item:last-child { border-bottom: none; }
-.food-item-emoji { font-size: 22px; width: 38px; text-align: center; flex-shrink: 0; }
-.food-item-info { flex: 1; min-width: 0; }
-.food-item-name { font-size: 15px; font-weight: 500; }
-.food-item-meta { font-size: 11px; color: var(--text-sub); font-family: 'DM Mono', monospace; margin-top: 1px; }
-.tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
-.tag-preset { background: var(--accent-soft); color: var(--accent); }
-.tag-custom { background: var(--green-soft); color: var(--green); }
-
-.search-input-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
   background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 14px;
-  transition: border-color 0.15s;
-}
-.search-input-wrap:focus-within { border-color: var(--accent); }
-.search-input-wrap input {
-  flex: 1;
-  border: none;
-  background: none;
-  font-size: 15px;
-  font-family: 'Noto Sans JP', sans-serif;
-  color: var(--text);
-  outline: none;
-}
-.search-input-wrap input::placeholder { color: var(--text-sub); }
-
-/* ── Modal ── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 100;
-  display: none;
-  align-items: flex-end;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--surface);
-  border-radius: 24px 24px 0 0;
-  width: 100%;
-  max-width: 430px;
-  padding: 0 0 calc(var(--safe-bottom) + 12px);
-  max-height: 85dvh;
-  display: flex;
-  flex-direction: column;
-  animation: slideUp 0.25s ease;
-}
-@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 16px; flex-shrink: 0; }
-.modal-title { font-size: 18px; font-weight: 700; padding: 0 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.modal-list { flex: 1; overflow-y: auto; padding: 8px 0; }
-.modal-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 13px 20px;
-  cursor: pointer;
-  transition: background 0.1s;
-}
-.modal-item:active { background: var(--bg); }
-.modal-item-emoji { font-size: 24px; width: 42px; height: 42px; background: var(--accent-soft); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.modal-item-name { font-size: 16px; font-weight: 500; flex: 1; }
-.modal-item-density { font-size: 12px; color: var(--text-sub); font-family: 'DM Mono', monospace; }
-.modal-check { color: var(--accent); font-size: 18px; }
-
-/* ── AI Badge ── */
-.ai-badge {
-  display: flex; align-items: center; gap: 5px;
-  background: linear-gradient(135deg, #2E7D5A, #1A5C8C);
-  border-radius: 16px; padding: 4px 10px 4px 8px;
-}
-.ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #7DFFC0; }
-.ai-text { font-size: 11px; color: white; font-weight: 600; }
-
-/* ── Numeric Keypad ── */
-.keypad {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  padding: 16px;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-.key-btn {
-  aspect-ratio: 1.4;
-  border-radius: 12px;
+.tab {
+  flex: 1;
+  padding: 9px 4px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
   border: none;
-  font-size: 22px;
-  font-weight: 600;
-  font-family: 'DM Mono', monospace;
-  background: var(--surface);
-  color: var(--text);
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: all 0.1s;
-  display: flex; align-items: center; justify-content: center;
+  font-family: 'Noto Sans JP', sans-serif;
+  border-bottom: 2px solid transparent;
 }
-.key-btn:active { transform: scale(0.94); background: var(--border); }
-.key-btn.key-del { font-size: 18px; background: var(--border); }
-.key-btn.key-dot { font-size: 26px; }
-.key-btn.key-empty { background: transparent; box-shadow: none; pointer-events: none; }
+.tab.active { border-bottom-color: var(--accent); }
+.tab-icon { font-size: 18px; }
+.tab-label { font-size: 10px; color: var(--sub); font-weight: 500; }
+.tab.active .tab-label { color: var(--accent); }
 
-/* ── Toaster ── */
-.toast {
-  position: fixed;
-  bottom: calc(var(--safe-bottom) + 90px);
-  left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--text);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 200;
-  white-space: nowrap;
+/* スクリーン */
+.screen { display: none; flex: 1; flex-direction: column; min-height: 0; }
+.screen.active { display: flex; }
+.scroll { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+
+/* カード */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
+.label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sub); margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+
+/* 食材セレクター */
+.food-sel {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 10px 12px; cursor: pointer;
 }
+.food-sel:active { border-color: var(--accent); }
+.food-icon { font-size: 24px; width: 40px; height: 40px; background: var(--accent-soft); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.food-name { font-size: 16px; font-weight: 700; }
+.food-density { font-size: 11px; color: var(--sub); font-family: 'DM Mono', monospace; margin-top: 1px; }
+.chevron { margin-left: auto; color: var(--sub); font-size: 12px; }
+
+/* トグル */
+.toggle { display: flex; background: var(--bg); border-radius: 10px; padding: 3px; border: 1px solid var(--border); }
+.toggle-btn { flex: 1; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; color: var(--sub); cursor: pointer; border: none; background: none; font-family: 'Noto Sans JP', sans-serif; }
+.toggle-btn.active { background: var(--accent); color: white; }
+
+/* チップ */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { padding: 6px 13px; border-radius: 20px; font-size: 13px; font-weight: 500; border: 1.5px solid var(--border); color: var(--sub); background: var(--bg); cursor: pointer; }
+.chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.chip.green { border-color: var(--green); color: white; background: var(--green); }
+
+/* 数値表示 */
+.num-box { background: var(--bg); border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+.num-big { font-size: 36px; font-weight: 700; font-family: 'DM Mono', monospace; flex: 1; }
+.num-unit { font-size: 14px; color: var(--sub); }
+
+/* 結果 */
+.result { background: var(--accent); border-radius: 16px; padding: 18px; display: flex; align-items: center; justify-content: space-between; }
+.result-label { font-size: 11px; color: rgba(255,255,255,0.65); font-family: 'DM Mono', monospace; margin-bottom: 3px; }
+.result-num { font-size: 44px; font-weight: 900; color: white; font-family: 'DM Mono', monospace; line-height: 1; }
+.result-unit { font-size: 17px; color: rgba(255,255,255,0.8); margin-top: 3px; }
+.result-formula { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.7; text-align: right; font-family: 'DM Mono', monospace; }
+
+/* テンキー */
+.keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; padding: 12px 14px; background: var(--bg); border-top: 1px solid var(--border); flex-shrink: 0; }
+.key { aspect-ratio: 1.5; border-radius: 10px; border: none; font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; background: var(--surface); color: var(--text); cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+.key:active { background: var(--border); }
+.key.del { font-size: 16px; background: var(--border); }
+
+/* レシピ行 */
+.recipe-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.recipe-row:last-child { border-bottom: none; }
+.recipe-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.recipe-name { font-size: 14px; font-weight: 500; flex: 1; }
+.recipe-from { font-size: 12px; color: var(--sub); font-family: 'DM Mono', monospace; }
+.recipe-arrow { font-size: 11px; color: var(--border); margin: 0 2px; }
+.recipe-to { font-size: 13px; font-weight: 700; color: var(--accent); font-family: 'DM Mono', monospace; }
+.recipe-del { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); background: none; color: var(--sub); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+/* 追加ボタン */
+.add-btn { display: flex; align-items: center; justify-content: center; gap: 6px; border: 1.5px dashed var(--border); border-radius: 12px; padding: 12px; font-size: 14px; color: var(--sub); background: transparent; cursor: pointer; width: 100%; margin-top: 8px; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; }
+.add-btn:active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+/* 食材リスト */
+.food-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.food-item:last-child { border-bottom: none; }
+.food-item-emoji { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
+.food-item-name { font-size: 15px; font-weight: 500; flex: 1; }
+.food-item-meta { font-size: 11px; color: var(--sub); font-family: 'DM Mono', monospace; }
+.tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; flex-shrink: 0; }
+.tag-p { background: var(--accent-soft); color: var(--accent); }
+.tag-c { background: var(--green-soft); color: var(--green); }
+
+/* 検索バー */
+.search { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 12px; }
+.search:focus-within { border-color: var(--accent); }
+.search input { flex: 1; border: none; background: none; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; color: var(--text); outline: none; }
+.search input::placeholder { color: var(--sub); }
+
+/* モーダル */
+.overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; display: none; align-items: flex-end; backdrop-filter: blur(3px); }
+.overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: 22px 22px 0 0; width: 100%; max-height: 80%; display: flex; flex-direction: column; animation: up 0.22s ease; }
+@keyframes up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 10px auto 14px; flex-shrink: 0; }
+.modal-title { font-size: 17px; font-weight: 700; padding: 0 18px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.modal-list { flex: 1; overflow-y: auto; }
+.modal-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; cursor: pointer; }
+.modal-item:active { background: var(--bg); }
+.modal-emoji { font-size: 22px; width: 40px; height: 40px; background: var(--accent-soft); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.modal-name { font-size: 15px; font-weight: 500; flex: 1; }
+.modal-density { font-size: 11px; color: var(--sub); font-family: 'DM Mono', monospace; }
+.modal-check { color: var(--accent); font-size: 17px; }
+
+/* レシピ追加サブスクリーン */
+.subscreen { display: none; position: absolute; inset: 0; background: var(--bg); z-index: 40; flex-direction: column; }
+.subscreen.open { display: flex; }
+.sub-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.back-btn { border: none; background: none; font-size: 24px; color: var(--sub); cursor: pointer; padding: 0 4px; }
+.sub-title { font-size: 18px; font-weight: 700; flex: 1; }
+.add-confirm-btn { background: var(--green); color: white; border: none; border-radius: 10px; padding: 8px 16px; font-size: 14px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+
+/* AI */
+.ai-badge { display: flex; align-items: center; gap: 4px; background: linear-gradient(135deg,#2E7D5A,#1A5C8C); border-radius: 14px; padding: 3px 9px 3px 7px; }
+.ai-dot { width: 5px; height: 5px; border-radius: 50%; background: #7DFFC0; }
+.ai-text { font-size: 11px; color: white; font-weight: 600; }
+
+/* グリーンボタン */
+.green-btn { background: var(--green); color: white; border: none; border-radius: 12px; padding: 13px; font-size: 15px; font-weight: 700; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; width: 100%; }
+
+/* トースト */
+.toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--text); color: white; padding: 9px 18px; border-radius: 18px; font-size: 13px; font-weight: 500; opacity: 0; transition: all 0.25s; z-index: 100; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ── Green Button ── */
-.green-btn {
-  background: var(--green);
-  color: white;
-  border: none;
-  border-radius: 14px;
-  padding: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: 'Noto Sans JP', sans-serif;
-  cursor: pointer;
-  width: 100%;
-  transition: opacity 0.15s;
-}
-.green-btn:active { opacity: 0.8; }
+/* 食材追加フォーム */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-input { background: var(--bg); border: 1.5px solid var(--border); border-radius: 10px; padding: 11px 13px; font-size: 15px; font-family: 'Noto Sans JP', sans-serif; color: var(--text); outline: none; width: 100%; }
+.form-input:focus { border-color: var(--accent); }
 </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- ヘッダー -->
 <div class="header">
-  <div class="header-row">
-    <div>
-      <div class="app-title">はか<span>る</span>ん</div>
-    </div>
-    <div class="header-sub">料理の単位変換</div>
-  </div>
+  <div class="app-title">はか<span>る</span>ん</div>
+  <div class="app-sub">料理の単位変換</div>
 </div>
 
-<!-- Tab Bar -->
-<div class="tab-bar">
-  <button class="tab-btn active" onclick="switchTab('convert',this)">
+<!-- タブ -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('convert',this)">
     <span class="tab-icon">⚖️</span>
     <span class="tab-label">変換</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('recipe',this)">
+  <button class="tab" onclick="switchTab('recipe',this)">
     <span class="tab-icon">📋</span>
     <span class="tab-label">レシピ</span>
   </button>
-  <button class="tab-btn" onclick="switchTab('foods',this)">
+  <button class="tab" onclick="switchTab('foods',this)">
     <span class="tab-icon">🥄</span>
     <span class="tab-label">食材</span>
   </button>
 </div>
 
-<!-- ── Screen 1: Convert ── -->
+<!-- 変換タブ -->
 <div class="screen active" id="screen-convert">
-  <div class="screen-scroll">
+  <div class="scroll">
     <div class="card">
-      <div class="card-label">食材</div>
-      <div class="food-selector" onclick="openFoodModal('convert')">
-        <div class="food-emoji" id="convert-food-emoji">🌾</div>
+      <div class="label">食材</div>
+      <div class="food-sel" onclick="openFoodModal('convert')">
+        <div class="food-icon" id="c-emoji">🌾</div>
         <div>
-          <div class="food-name-big" id="convert-food-name">薄力粉</div>
-          <div class="food-density-small" id="convert-food-density">比重 0.53 g/ml</div>
+          <div class="food-name" id="c-name">薄力粉</div>
+          <div class="food-density" id="c-density">比重 0.53 g/ml</div>
         </div>
-        <div class="food-chevron">▼</div>
+        <div class="chevron">▼</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-label">変換方向</div>
-      <div class="dir-toggle">
-        <button class="dir-btn active" id="dir-vol" onclick="setDir('vol')">体積 → 重さ</button>
-        <button class="dir-btn" id="dir-wt" onclick="setDir('wt')">重さ → 体積</button>
+      <div class="label">変換方向</div>
+      <div class="toggle">
+        <button class="toggle-btn active" id="dir-vol" onclick="setDir('vol')">体積 → 重さ</button>
+        <button class="toggle-btn" id="dir-wt" onclick="setDir('wt')">重さ → 体積</button>
       </div>
     </div>
     <div class="card">
-      <div class="card-label">単位</div>
-      <div class="unit-chips" id="unit-chips"></div>
+      <div class="label">単位</div>
+      <div class="chips" id="unit-chips"></div>
     </div>
     <div class="card">
-      <div class="card-label">入力</div>
-      <div class="num-input-wrap">
-        <div class="num-display" id="num-display">0</div>
-        <div class="num-unit-label" id="num-unit-label">大さじ</div>
+      <div class="label">入力</div>
+      <div class="num-box">
+        <div class="num-big" id="num-display">0</div>
+        <div class="num-unit" id="num-unit">大さじ</div>
       </div>
     </div>
-    <div class="result-card">
+    <div class="result">
       <div>
-        <div class="result-label-small" id="result-label">重さ</div>
-        <div class="result-number" id="result-number">—</div>
-        <div class="result-unit-big" id="result-unit">g</div>
+        <div class="result-label" id="result-label">重さ</div>
+        <div class="result-num" id="result-num">—</div>
+        <div class="result-unit" id="result-unit">g</div>
       </div>
       <div class="result-formula" id="result-formula"></div>
     </div>
   </div>
-  <!-- テンキー固定 -->
   <div class="keypad">
-    <button class="key-btn" onclick="kp('7')">7</button>
-    <button class="key-btn" onclick="kp('8')">8</button>
-    <button class="key-btn" onclick="kp('9')">9</button>
-    <button class="key-btn" onclick="kp('4')">4</button>
-    <button class="key-btn" onclick="kp('5')">5</button>
-    <button class="key-btn" onclick="kp('6')">6</button>
-    <button class="key-btn" onclick="kp('1')">1</button>
-    <button class="key-btn" onclick="kp('2')">2</button>
-    <button class="key-btn" onclick="kp('3')">3</button>
-    <button class="key-btn key-dot" onclick="kp('.')">·</button>
-    <button class="key-btn" onclick="kp('0')">0</button>
-    <button class="key-btn key-del" onclick="kp('del')">⌫</button>
+    <button class="key" onclick="kp('7')">7</button>
+    <button class="key" onclick="kp('8')">8</button>
+    <button class="key" onclick="kp('9')">9</button>
+    <button class="key" onclick="kp('4')">4</button>
+    <button class="key" onclick="kp('5')">5</button>
+    <button class="key" onclick="kp('6')">6</button>
+    <button class="key" onclick="kp('1')">1</button>
+    <button class="key" onclick="kp('2')">2</button>
+    <button class="key" onclick="kp('3')">3</button>
+    <button class="key" onclick="kp('.')">·</button>
+    <button class="key" onclick="kp('0')">0</button>
+    <button class="key del" onclick="kp('del')">⌫</button>
   </div>
 </div>
 
-<!-- ── Screen 2: Recipe ── -->
+<!-- レシピタブ -->
 <div class="screen" id="screen-recipe">
-  <div class="screen-scroll">
+  <div class="scroll">
     <div class="card">
-      <div class="card-label">人数スケール</div>
-      <div class="scale-row" id="scale-row">
-        <div class="scale-chip" style="padding:6px 14px;border-radius:20px;font-size:13px;border:1.5px solid #DDD5C4;color:#9C8B72;background:#F7F2EA;cursor:pointer;font-weight:500;" onclick="setScale(0.5,this)">×½</div>
-        <div class="scale-chip active" style="padding:6px 14px;border-radius:20px;font-size:13px;border:1.5px solid #2E7D5A;color:white;background:#2E7D5A;cursor:pointer;font-weight:500;" onclick="setScale(1,this)">×1</div>
-        <div class="scale-chip" style="padding:6px 14px;border-radius:20px;font-size:13px;border:1.5px solid #DDD5C4;color:#9C8B72;background:#F7F2EA;cursor:pointer;font-weight:500;" onclick="setScale(2,this)">×2</div>
-        <div class="scale-chip" style="padding:6px 14px;border-radius:20px;font-size:13px;border:1.5px solid #DDD5C4;color:#9C8B72;background:#F7F2EA;cursor:pointer;font-weight:500;" onclick="setScale(3,this)">×3</div>
-        <div class="scale-chip" style="padding:6px 14px;border-radius:20px;font-size:13px;border:1.5px solid #DDD5C4;color:#9C8B72;background:#F7F2EA;cursor:pointer;font-weight:500;" onclick="setScale(4,this)">×4</div>
+      <div class="label">人数スケール</div>
+      <div class="chips" id="scale-chips">
+        <div class="chip" onclick="setScale(0.5,this)">×½</div>
+        <div class="chip green" onclick="setScale(1,this)">×1</div>
+        <div class="chip" onclick="setScale(2,this)">×2</div>
+        <div class="chip" onclick="setScale(3,this)">×3</div>
+        <div class="chip" onclick="setScale(4,this)">×4</div>
       </div>
     </div>
     <div class="card">
-      <div class="card-label">食材リスト</div>
-      <div class="recipe-list" id="recipe-list">
-        <div style="color:var(--text-sub);font-size:13px;padding:12px 0;text-align:center;">まだ食材がありません</div>
+      <div class="label">食材リスト</div>
+      <div id="recipe-list">
+        <div style="color:var(--sub);font-size:13px;padding:10px 0;text-align:center;">まだ食材がありません</div>
       </div>
       <button class="add-btn" onclick="openRecipeAdd()">＋ 食材を追加</button>
     </div>
   </div>
 </div>
 
-<!-- ── Screen 3: Foods ── -->
+<!-- 食材タブ -->
 <div class="screen" id="screen-foods">
-  <div class="screen-scroll">
-  <div class="search-input-wrap">
-    <span style="font-size:16px;">🔍</span>
-    <input type="text" placeholder="食材名で検索…" id="food-search" oninput="renderFoodList()">
-    <div class="ai-badge">
-      <div class="ai-dot"></div>
-      <div class="ai-text">AI補完</div>
+  <div class="scroll">
+    <div class="search">
+      <span>🔍</span>
+      <input type="text" placeholder="食材名で検索…" id="food-search" oninput="renderFoodList()">
+      <div class="ai-badge"><div class="ai-dot"></div><div class="ai-text">AI補完</div></div>
+    </div>
+    <div class="card">
+      <div class="label">プリセット食材</div>
+      <div id="preset-list"></div>
+    </div>
+    <div class="card">
+      <div class="label">マイ食材</div>
+      <div id="custom-list"></div>
+      <button class="add-btn" onclick="openAddFood()">＋ 食材を追加</button>
     </div>
   </div>
-
-  <div class="card" id="food-preset-card">
-    <div class="card-label">プリセット食材</div>
-    <div id="preset-food-list"></div>
-  </div>
-
-  <div class="card" id="food-custom-card">
-    <div class="card-label">マイ食材</div>
-    <div id="custom-food-list"></div>
-    <button class="add-btn" onclick="openAddFoodModal()">＋ 食材を追加</button>
-  </div>
-  </div><!-- /screen-scroll -->
 </div>
 
-<!-- ── Food Select Modal ── -->
-<div class="modal-overlay" id="food-modal" onclick="closeFoodModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
+<!-- 食材選択モーダル -->
+<div class="overlay" id="food-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">食材を選ぶ</div>
-    <div class="modal-list" id="modal-food-list"></div>
+    <div class="modal-list" id="modal-list"></div>
   </div>
 </div>
 
-<!-- ── Add Food Modal ── -->
-<div class="modal-overlay" id="add-food-modal" onclick="closeAddFoodModal(event)">
-  <div class="modal" style="padding-bottom:calc(var(--safe-bottom)+16px);" onclick="event.stopPropagation()">
+<!-- 食材追加モーダル -->
+<div class="overlay" id="add-food-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" style="padding:0 0 20px;">
     <div class="modal-handle"></div>
     <div class="modal-title">食材を追加</div>
-    <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">食材名</div>
-        <div class="search-input-wrap">
-          <input type="text" id="new-food-name" placeholder="例：ごま油" style="font-size:15px;">
-        </div>
+    <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+      <div class="form-group">
+        <div class="label">食材名</div>
+        <input class="form-input" type="text" id="new-name" placeholder="例：ごま油">
       </div>
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">絵文字（任意）</div>
-        <div class="search-input-wrap">
-          <input type="text" id="new-food-emoji" placeholder="🫙" maxlength="2" style="font-size:22px;width:50px;">
-        </div>
+      <div class="form-group">
+        <div class="label">絵文字（任意）</div>
+        <input class="form-input" type="text" id="new-emoji" placeholder="🫙" maxlength="2" style="width:60px;">
       </div>
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">比重（g/ml）</div>
-        <div class="search-input-wrap">
-          <input type="number" id="new-food-density" placeholder="例：0.92" step="0.01" style="font-size:15px;">
-        </div>
-        <div style="font-size:11px;color:var(--text-sub);margin-top:6px;">わからない場合は空欄→AI補完を試みます</div>
+      <div class="form-group">
+        <div class="label">比重（g/ml）</div>
+        <input class="form-input" type="number" id="new-density" placeholder="例：0.92" step="0.01">
+        <div style="font-size:11px;color:var(--sub);">空欄の場合はAIが自動補完します</div>
       </div>
       <button class="green-btn" onclick="saveNewFood()">保存する</button>
     </div>
   </div>
 </div>
 
-    <!-- スクロールしない固定エリア：食材・単位 -->
-    <div style="padding:12px 20px 0;display:flex;flex-direction:column;gap:10px;flex-shrink:0;">
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">食材</div>
-        <div class="food-selector" onclick="openFoodModal('recipe')" id="recipe-food-selector">
-          <div class="food-emoji" id="recipe-sel-emoji">🌾</div>
-          <div>
-            <div class="food-name-big" id="recipe-sel-name">薄力粉</div>
-            <div class="food-density-small" id="recipe-sel-density">比重 0.53 g/ml</div>
-          </div>
-          <div class="food-chevron">▼</div>
-        </div>
-      </div>
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">単位</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recipe-unit-chips"></div>
-      </div>
-
-      <!-- 量表示 -->
-      <div>
-        <div class="card-label" style="margin-bottom:6px;">量</div>
-        <div class="num-input-wrap" style="cursor:default;">
-          <div class="num-display" id="recipe-num-display" style="font-size:28px;">0</div>
-          <div class="num-unit-label" id="recipe-num-unit-label">大さじ</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- テンキー＋追加ボタン：常に下に固定 -->
-    <div style="padding:10px 16px calc(var(--safe-bottom)+12px);flex-shrink:0;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;">
-        <button class="key-btn" onclick="rkp('7')">7</button>
-        <button class="key-btn" onclick="rkp('8')">8</button>
-        <button class="key-btn" onclick="rkp('9')">9</button>
-        <button class="key-btn" onclick="rkp('4')">4</button>
-        <button class="key-btn" onclick="rkp('5')">5</button>
-        <button class="key-btn" onclick="rkp('6')">6</button>
-        <button class="key-btn" onclick="rkp('1')">1</button>
-        <button class="key-btn" onclick="rkp('2')">2</button>
-        <button class="key-btn" onclick="rkp('3')">3</button>
-        <button class="key-btn key-dot" onclick="rkp('.')">·</button>
-        <button class="key-btn" onclick="rkp('0')">0</button>
-        <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
-      </div>
-      <button class="green-btn" onclick="addToRecipe()" style="font-size:17px;padding:16px;">✓ 追加する</button>
-    </div>
+<!-- レシピ追加サブスクリーン -->
+<div class="subscreen" id="recipe-add">
+  <div class="sub-header">
+    <button class="back-btn" onclick="closeRecipeAdd()">‹</button>
+    <div class="sub-title">食材を追加</div>
+    <button class="add-confirm-btn" onclick="addToRecipe()">✓ 追加</button>
   </div>
-</div>
-
-<!-- ── Recipe Add Sub-screen ── -->
-<div id="screen-recipe-add" style="display:none;position:absolute;inset:0;background:var(--bg);z-index:50;flex-direction:column;">
-  <!-- ヘッダー -->
-  <div style="padding:calc(var(--safe-top)+8px) 16px 12px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;">
-    <button onclick="closeRecipeAdd()" style="border:none;background:none;font-size:22px;color:var(--text-sub);cursor:pointer;padding:4px;">‹</button>
-    <div style="font-size:20px;font-weight:700;">食材を追加</div>
-    <button onclick="addToRecipe()" style="margin-left:auto;background:var(--green);color:white;border:none;border-radius:12px;padding:9px 18px;font-size:15px;font-weight:700;font-family:'Noto Sans JP',sans-serif;cursor:pointer;">✓ 追加</button>
-  </div>
-
-  <!-- 食材選択 -->
-  <div style="padding:16px;display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;">
-    <div>
-      <div class="card-label" style="margin-bottom:6px;">食材</div>
-      <div class="food-selector" onclick="openFoodModal('recipe')">
-        <div class="food-emoji" id="recipe-sel-emoji">🌾</div>
+  <div class="scroll">
+    <div class="card">
+      <div class="label">食材</div>
+      <div class="food-sel" onclick="openFoodModal('recipe')">
+        <div class="food-icon" id="r-emoji">🌾</div>
         <div>
-          <div class="food-name-big" id="recipe-sel-name">薄力粉</div>
-          <div class="food-density-small" id="recipe-sel-density">比重 0.53 g/ml</div>
+          <div class="food-name" id="r-name">薄力粉</div>
+          <div class="food-density" id="r-density">比重 0.53 g/ml</div>
         </div>
-        <div class="food-chevron">▼</div>
+        <div class="chevron">▼</div>
       </div>
     </div>
-    <div>
-      <div class="card-label" style="margin-bottom:6px;">単位</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;" id="recipe-unit-chips"></div>
+    <div class="card">
+      <div class="label">単位</div>
+      <div class="chips" id="r-unit-chips"></div>
     </div>
-    <div>
-      <div class="card-label" style="margin-bottom:6px;">量</div>
-      <div class="num-input-wrap" style="cursor:default;">
-        <div class="num-display" id="recipe-num-display" style="font-size:34px;">0</div>
-        <div class="num-unit-label" id="recipe-num-unit-label">大さじ</div>
+    <div class="card">
+      <div class="label">量</div>
+      <div class="num-box">
+        <div class="num-big" id="r-num" style="font-size:30px;">0</div>
+        <div class="num-unit" id="r-unit-label">大さじ</div>
       </div>
     </div>
   </div>
-
-  <!-- テンキー＋追加ボタン（常に下に固定） -->
-  <div style="padding:8px 14px calc(var(--safe-bottom)+10px);background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:8px;">
-      <button class="key-btn" onclick="rkp('7')">7</button>
-      <button class="key-btn" onclick="rkp('8')">8</button>
-      <button class="key-btn" onclick="rkp('9')">9</button>
-      <button class="key-btn" onclick="rkp('4')">4</button>
-      <button class="key-btn" onclick="rkp('5')">5</button>
-      <button class="key-btn" onclick="rkp('6')">6</button>
-      <button class="key-btn" onclick="rkp('1')">1</button>
-      <button class="key-btn" onclick="rkp('2')">2</button>
-      <button class="key-btn" onclick="rkp('3')">3</button>
-      <button class="key-btn key-dot" onclick="rkp('.')">·</button>
-      <button class="key-btn" onclick="rkp('0')">0</button>
-      <button class="key-btn key-del" onclick="rkp('del')">⌫</button>
-    </div>
+  <div class="keypad">
+    <button class="key" onclick="rkp('7')">7</button>
+    <button class="key" onclick="rkp('8')">8</button>
+    <button class="key" onclick="rkp('9')">9</button>
+    <button class="key" onclick="rkp('4')">4</button>
+    <button class="key" onclick="rkp('5')">5</button>
+    <button class="key" onclick="rkp('6')">6</button>
+    <button class="key" onclick="rkp('1')">1</button>
+    <button class="key" onclick="rkp('2')">2</button>
+    <button class="key" onclick="rkp('3')">3</button>
+    <button class="key" onclick="rkp('.')">·</button>
+    <button class="key" onclick="rkp('0')">0</button>
+    <button class="key del" onclick="rkp('del')">⌫</button>
   </div>
 </div>
 
-<!-- Toast -->
+<!-- トースト -->
 <div class="toast" id="toast"></div>
 
 <script>
+
 // ── Data ──
 const UNITS_VOL = [
   { id:'ml', label:'ml', ml:1 },
@@ -729,9 +498,9 @@ function calcResult() {
 // ── Render ──
 function renderConvert() {
   const food = state.convertFood;
-  document.getElementById('convert-food-emoji').textContent = food.emoji;
-  document.getElementById('convert-food-name').textContent = food.name;
-  document.getElementById('convert-food-density').textContent = `比重 ${food.density} g/ml`;
+  document.getElementById('c-emoji').textContent = food.emoji;
+  document.getElementById('c-name').textContent = food.name;
+  document.getElementById('c-density').textContent = `比重 ${food.density} g/ml`;
 
   // Units
   const chips = document.getElementById('unit-chips');
@@ -752,10 +521,10 @@ function renderConvert() {
 
   document.getElementById('num-display').textContent = state.inputStr;
   const activeUnitObj = units.find(u => u.id === activeUnit);
-  document.getElementById('num-unit-label').textContent = activeUnitObj ? activeUnitObj.label : '';
+  document.getElementById('num-unit').textContent = activeUnitObj ? activeUnitObj.label : '';
 
   const res = calcResult();
-  document.getElementById('result-number').textContent = res.display;
+  document.getElementById('result-num').textContent = res.display;
   document.getElementById('result-unit').textContent = res.unit || '';
   document.getElementById('result-formula').textContent = res.formula || '';
   document.getElementById('result-label').textContent = res.label || '';
@@ -821,7 +590,7 @@ function renderFoodList() {
 }
 
 function renderRecipeUnitChips() {
-  const el = document.getElementById('recipe-unit-chips');
+  const el = document.getElementById('r-unit-chips');
   el.innerHTML = '';
   UNITS_VOL.forEach(u => {
     const div = document.createElement('div');
@@ -835,7 +604,7 @@ function renderRecipeUnitChips() {
 // ── Tab ──
 function switchTab(tab, el) {
   // サブスクリーンを必ず閉じる
-  document.getElementById('screen-recipe-add').style.display = 'none';
+  document.getElementById('recipe-add').classList.remove('open');
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-' + tab).classList.add('active');
@@ -877,7 +646,7 @@ function setScale(s, el) {
 // ── Food Modal ──
 function openFoodModal(target) {
   state.foodModalTarget = target;
-  const list = document.getElementById('modal-food-list');
+  const list = document.getElementById('modal-list');
   list.innerHTML = '';
   const currentId = target === 'convert' ? state.convertFood.id : state.recipeFood.id;
   allFoods().forEach(f => {
@@ -906,27 +675,27 @@ function selectFood(food) {
     renderConvert();
   } else {
     state.recipeFood = food;
-    document.getElementById('recipe-sel-emoji').textContent = food.emoji;
-    document.getElementById('recipe-sel-name').textContent = food.name;
-    document.getElementById('recipe-sel-density').textContent = `比重 ${food.density} g/ml`;
+    document.getElementById('r-emoji').textContent = food.emoji;
+    document.getElementById('r-name').textContent = food.name;
+    document.getElementById('r-density').textContent = `比重 ${food.density} g/ml`;
   }
 }
 
 // ── Add Food Modal ──
-function openAddFoodModal() {
-  document.getElementById('new-food-name').value = '';
-  document.getElementById('new-food-emoji').value = '';
-  document.getElementById('new-food-density').value = '';
+function openAddFood() {
+  document.getElementById('new-name').value = '';
+  document.getElementById('new-emoji').value = '';
+  document.getElementById('new-density').value = '';
   document.getElementById('add-food-modal').classList.add('open');
 }
 function closeAddFoodModal(e) {
   if (e.target === document.getElementById('add-food-modal')) document.getElementById('add-food-modal').classList.remove('open');
 }
 async function saveNewFood() {
-  const name = document.getElementById('new-food-name').value.trim();
+  const name = document.getElementById('new-name').value.trim();
   if (!name) { showToast('食材名を入力してください'); return; }
-  let density = parseFloat(document.getElementById('new-food-density').value);
-  const emoji = document.getElementById('new-food-emoji').value || '🍴';
+  let density = parseFloat(document.getElementById('new-density').value);
+  const emoji = document.getElementById('new-emoji').value || '🍴';
 
   if (!density) {
     showToast('比重を取得中…');
@@ -969,7 +738,7 @@ async function fetchDensityAI(name) {
     const num = parseFloat(text);
     if (!isNaN(num) && num > 0 && num < 20) {
       showToast(`AI補完: ${name} = ${num} g/ml`);
-      document.getElementById('new-food-density').value = num;
+      document.getElementById('new-density').value = num;
       return num;
     }
     return null;
@@ -990,11 +759,11 @@ function rkp(key) {
     if (recipeInputStr === '0') recipeInputStr = key;
     else if (recipeInputStr.length < 6) recipeInputStr += key;
   }
-  document.getElementById('recipe-num-display').textContent = recipeInputStr;
+  document.getElementById('r-num').textContent = recipeInputStr;
 }
 function renderRecipeNumUnit() {
   const unit = UNITS_VOL.find(u => u.id === state.recipeUnitVol);
-  const el = document.getElementById('recipe-num-unit-label');
+  const el = document.getElementById('r-unit-label');
   if (el) el.textContent = unit ? unit.label : '';
 }
 
@@ -1002,15 +771,15 @@ function openRecipeAdd() {
   state.recipeFood = PRESET_FOODS[0];
   state.recipeUnitVol = 'tbsp';
   recipeInputStr = '0';
-  document.getElementById('recipe-sel-emoji').textContent = PRESET_FOODS[0].emoji;
-  document.getElementById('recipe-sel-name').textContent = PRESET_FOODS[0].name;
-  document.getElementById('recipe-sel-density').textContent = `比重 ${PRESET_FOODS[0].density} g/ml`;
-  document.getElementById('recipe-num-display').textContent = '0';
+  document.getElementById('r-emoji').textContent = PRESET_FOODS[0].emoji;
+  document.getElementById('r-name').textContent = PRESET_FOODS[0].name;
+  document.getElementById('r-density').textContent = `比重 ${PRESET_FOODS[0].density} g/ml`;
+  document.getElementById('r-num').textContent = '0';
   renderRecipeUnitChips();
   renderRecipeNumUnit();
-  document.getElementById('screen-recipe-add').style.display = 'flex';
+  document.getElementById('recipe-add').classList.add('open');
 }
-function closeRecipeAdd() { document.getElementById('screen-recipe-add').style.display = 'none'; }
+function closeRecipeAdd() { document.getElementById('recipe-add').classList.remove('open'); }
 function addToRecipe() {
   const amount = parseFloat(recipeInputStr);
   if (!amount || amount <= 0) { showToast('量を入力してください'); return; }
@@ -1023,7 +792,7 @@ function addToRecipe() {
     amount,
   });
   saveState();
-  document.getElementById('screen-recipe-add').style.display = 'none';
+  document.getElementById('recipe-add').classList.remove('open');
   renderRecipe();
   showToast(`「${state.recipeFood.name}」を追加しました`);
 }
@@ -1036,6 +805,7 @@ function removeRecipeItem(i) {
 // ── Init ──
 renderConvert();
 renderFoodList();
+
 </script>
 </body>
 </html>
