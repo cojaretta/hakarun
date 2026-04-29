@@ -308,7 +308,7 @@ body {
     <div class="search">
       <span>🔍</span>
       <input type="text" placeholder="食材名で検索…" id="food-search" oninput="renderFoodList()">
-      <div class="ai-badge"><div class="ai-dot"></div><div class="ai-text">AI補完</div></div>
+      <div class="ai-badge"><div class="ai-dot"></div><div class="ai-text">辞書補完</div></div>
     </div>
     <div class="card">
       <div class="label">マイ食材</div>
@@ -431,6 +431,14 @@ const PRESET_FOODS = [
   { id:'starch',   emoji:'🫙', name:'片栗粉',        density:0.55, preset:true },
   { id:'miso',     emoji:'🍜', name:'味噌',          density:1.10, preset:true },
   { id:'vinegar',  emoji:'🧪', name:'酢',            density:1.01, preset:true },
+  { id:'ketchup',  emoji:'🍅', name:'ケチャップ',      density:1.15, preset:true },
+  { id:'mayo',     emoji:'🥚', name:'マヨネーズ',      density:0.91, preset:true },
+  { id:'worces',   emoji:'🫙', name:'ウスターソース',   density:1.09, preset:true },
+  { id:'okonomi',  emoji:'🥬', name:'お好みソース',    density:1.15, preset:true },
+  { id:'sesame',   emoji:'🌰', name:'ごま油',          density:0.92, preset:true },
+  { id:'oyster',   emoji:'🦪', name:'オイスターソース', density:1.15, preset:true },
+  { id:'cream',    emoji:'🥛', name:'生クリーム',      density:1.00, preset:true },
+  { id:'ponzu',    emoji:'🍋', name:'ポン酢',          density:1.05, preset:true },
 ];
 
 // Load custom foods from localStorage
@@ -586,8 +594,8 @@ function renderFoodList() {
     });
   };
 
-  renderItems(presets, 'preset-food-list');
-  renderItems(customs.length ? customs : [], 'custom-food-list');
+  renderItems(presets, 'preset-list');
+  renderItems(customs.length ? customs : [], 'custom-list');
 }
 
 function renderRecipeUnitChips() {
@@ -703,7 +711,7 @@ async function saveNewFood() {
   if (!density) {
     showToast('比重を取得中…');
     density = await fetchDensityAI(name);
-    if (!density) { showToast('比重を手動で入力してください'); return; }
+    if (!density) { showToast('辞書にない食材です。比重を手動入力してください'); return; }
   }
 
   const newFood = { id: 'c_' + Date.now(), emoji, name, density, preset: false };
@@ -721,8 +729,37 @@ function deleteCustomFood(id) {
   showToast('削除しました');
 }
 
-// ── AI Density Fetch ──
+// ── 比重辞書 ──
+const DENSITY_DICT = {
+  'ケチャップ':1.15,'マヨネーズ':0.91,'マーガリン':0.91,'ショートニング':0.85,
+  'ごま油':0.92,'オリーブオイル':0.91,'ごま':0.62,'きな粉':0.25,
+  'パン粉':0.20,'コーンスターチ':0.55,'ベーキングパウダー':0.90,
+  'ドレッシング':1.05,'ポン酢':1.05,'めんつゆ':1.10,'だし':1.00,
+  'ウスターソース':1.09,'オイスターソース':1.15,'豆板醤':1.10,
+  'バルサミコ酢':1.06,'ごま油':0.92,'ラー油':0.91,'花椒':0.50,
+  'カレー粉':0.50,'シナモン':0.45,'ナツメグ':0.50,'パプリカ':0.45,
+  '生クリーム':1.00,'サワークリーム':1.00,'ヨーグルト':1.05,
+  'コンデンスミルク':1.30,'豆乳':1.03,'アーモンドミルク':1.01,
+  'ピーナッツバター':1.10,'ジャム':1.30,'チョコレートシロップ':1.30,
+  'メープルシロップ':1.32,'コーンシロップ':1.38,'水あめ':1.40,
+  'ラム酒':0.95,'みそ':1.10,'白みそ':1.05,
+};
 async function fetchDensityAI(name) {
+  // ローカル辞書から検索
+  for (const [key, val] of Object.entries(DENSITY_DICT)) {
+    if (name.includes(key) || key.includes(name)) {
+      showToast(`${name} = ${val} g/ml`);
+      document.getElementById('new-density').value = val;
+      return val;
+    }
+  }
+  // プリセットからも検索
+  const preset = PRESET_FOODS.find(f => f.name.includes(name) || name.includes(f.name));
+  if (preset) {
+    showToast(`${name} = ${preset.density} g/ml`);
+    document.getElementById('new-density').value = preset.density;
+    return preset.density;
+  }
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
